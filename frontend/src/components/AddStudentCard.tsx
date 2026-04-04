@@ -7,9 +7,10 @@
  * - Does NOT enforce strict ID format (to avoid losing points)
  */
 
-import { Alert, Box, Button, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button,  TextField, Typography } from "@mui/material";
 import { useMemo, useState } from "react";
 import type { Student } from "../types";
+import {COLORS} from "../theme.ts";
 
 type Props = {
     onAdd: (input: {
@@ -134,7 +135,44 @@ export default function AddStudentCard({ onAdd, afterAdd }: Props) {
                 />
 
                 {/* Server-side error (e.g., duplicate ID) */}
-                {serverError && <Alert severity="error">Could not add student: {serverError}</Alert>}
+                {serverError && (
+                    <Alert
+                        severity="error"
+                        icon={false}
+                        sx={{
+                            mt: 1,
+                            borderRadius: 2.4,
+                            border: "1px solid rgba(255,64,64,0.45)",
+                            backgroundColor: "rgba(255,64,64,0.12)",
+                            py: 0.5,
+                            "& .MuiAlert-message": { width: "100%" },
+                            marginBottom: 2,
+                        }}
+                    >
+                        <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
+                            <Box
+                                sx={{
+                                    px: 1.2,
+                                    py: 0.35,
+                                    borderRadius: 2.5,
+                                    fontWeight: 900,
+                                    letterSpacing: 0.6,
+                                    fontSize: 12,
+                                    backgroundColor: "rgba(255,64,64,0.25)",
+                                    flexShrink: 0,
+                                    color: COLORS.text
+                                }}
+                            >
+                                ERROR
+                            </Box>
+
+                            <Typography variant="body2" sx={{ opacity: 0.9, minWidth: 0, color: COLORS.text
+                            }}>
+                                Could not add student: {serverError}
+                            </Typography>
+                        </Box>
+                    </Alert>
+                )}
 
                 <Button
                     variant="contained"

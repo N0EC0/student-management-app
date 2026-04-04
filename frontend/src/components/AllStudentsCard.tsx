@@ -64,35 +64,55 @@ export default function AllStudentsCard({ students, loading, error, onRefresh }:
 
     return (
         <Box sx={{ p: { xs: 2, sm: 2.5, md: 3 } }}>
-            {/* Header row */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+            {/* Header: title + controls */}
+            <Box
+                sx={{
+                    display: "grid",
+                    gridTemplateColumns: { xs: "1fr", md: "1fr auto" },
+                    gap: 1.5,
+                    alignItems: { xs: "start", md: "center" },
+                }}
+            >
                 <Typography variant="h6" sx={{ fontWeight: 850 }}>
                     All Students
                 </Typography>
 
-                <Box sx={{ flex: 1 }} />
-
-                <ToggleButtonGroup
-                    size="small"
-                    exclusive
-                    value={sortMode}
-                    onChange={(_e, v: SortMode | null) => {
-                        if (v) setSortMode(v);
-                    }}
+                {/* Controls */}
+                <Box
                     sx={{
-                        "& .MuiToggleButton-root": {
-                            borderRadius: 999,
-                            px: 1.5,
-                        },
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 1.2,
+                        justifyContent: { xs: "flex-start", md: "flex-end" },
+                        flexWrap: "wrap",
                     }}
                 >
-                    <ToggleButton value="name">Name</ToggleButton>
-                    <ToggleButton value="credits">Credits</ToggleButton>
-                </ToggleButtonGroup>
+                    <Typography variant="caption" sx={{ opacity: 0.75, letterSpacing: 0.6 }}>
+                        Sort by:
+                    </Typography>
 
-                <Button variant="outlined" onClick={onRefresh}>
-                    Refresh
-                </Button>
+                    <ToggleButtonGroup
+                        size="small"
+                        exclusive
+                        value={sortMode}
+                        onChange={(_e, v: SortMode | null) => {
+                            if (v) setSortMode(v);
+                        }}
+                        sx={{
+                            "& .MuiToggleButton-root": {
+                                borderRadius: 999,
+                                px: 1.5,
+                            },
+                        }}
+                    >
+                        <ToggleButton value="name">Name</ToggleButton>
+                        <ToggleButton value="credits">Credits</ToggleButton>
+                    </ToggleButtonGroup>
+
+                    <Button variant="outlined" onClick={onRefresh} sx={{ borderRadius: 999 }}>
+                        Refresh
+                    </Button>
+                </Box>
             </Box>
 
             {/* Column labels */}

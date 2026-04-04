@@ -122,11 +122,12 @@ export default function App() {
                 <Paper
                     elevation={0}
                     sx={{
-                        p: { xs: 2, sm: 2.5, md: 3.5 },
+                        p: { xs: 5, sm: 5, md: 5 },
                         borderRadius: { xs: 4, md: 4 },
                         background: COLORS.cream,
                         color: "#0b0b0c",
                         border: "none",
+                        // padding: "1rem",
                     }}
                 >
                     <Box
@@ -217,7 +218,7 @@ export default function App() {
                         sx={{
                             background: COLORS.brown,
                             borderRadius: { xs: 4, md: 4 },
-                            p: { xs: 0.75, md: 1.25 },
+                            p: { xs: 3, md: 3 },
                             border: `1px solid ${COLORS.border}`,
                             overflow: "hidden", // keeps inner hover transforms tidy on small screens
                         }}
@@ -236,7 +237,7 @@ export default function App() {
                             sx={{
                                 background: "rgba(230,255,0,0.10)",
                                 borderRadius: { xs: 4, md: 4 },
-                                p: { xs: 0.75, md: 1.25 },
+                                p: { xs: 3, md: 3 },
                                 border: `1px solid rgba(230,255,0,0.18)`,
                                 overflow: "hidden",
                             }}
@@ -248,7 +249,7 @@ export default function App() {
                             sx={{
                                 background: "rgba(255,106,0,0.12)",
                                 borderRadius: { xs: 4, md: 4 },
-                                p: { xs: 0.75, md: 1.25 },
+                                p: { xs: 3, md: 3 },
                                 border: `1px solid rgba(255,106,0,0.22)`,
                                 overflow: "hidden",
                             }}
