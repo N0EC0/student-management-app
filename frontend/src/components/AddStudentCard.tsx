@@ -93,13 +93,13 @@ export default function AddStudentCard({ onAdd, afterAdd }: Props) {
                     label="Student ID"
                     value={newId}
                     onChange={(e) => setNewId(e.target.value)}
-                    placeholder="e.g., S12345"
+                    placeholder="example: 01234567"
                     // Only show errors after submit attempt
                     error={attemptedSubmit && !idValid}
                     helperText={
                         attemptedSubmit && !idValid
                             ? "Student ID is required."
-                            : "This is the student's own ID (not MongoDB _id)."
+                            : "8 digit unique identifier for student ID"
                     }
                 />
 
@@ -108,7 +108,7 @@ export default function AddStudentCard({ onAdd, afterAdd }: Props) {
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     error={attemptedSubmit && !firstValid}
-                    helperText={attemptedSubmit && !firstValid ? "First name is required." : "Example: Noémie"}
+                    helperText={attemptedSubmit && !firstValid ? "First name is required." : "Example: Harry"}
                 />
 
                 <TextField
@@ -116,15 +116,15 @@ export default function AddStudentCard({ onAdd, afterAdd }: Props) {
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     error={attemptedSubmit && !lastValid}
-                    helperText={attemptedSubmit && !lastValid ? "Last name is required." : "Example: Corneillier"}
+                    helperText={attemptedSubmit && !lastValid ? "Last name is required." : "Example: Potter"}
                 />
 
                 <TextField
-                    label="Completed Credit Hours"
+                    label="Completed Credit"
                     value={credits}
                     onChange={(e) => setCredits(e.target.value)}
                     inputMode="numeric"
-                    placeholder="e.g., 45"
+                    placeholder="example: 45"
                     error={attemptedSubmit && (!credits.trim() || !creditsValid)}
                     helperText={
                         attemptedSubmit && (!credits.trim() || !creditsValid)
@@ -144,10 +144,6 @@ export default function AddStudentCard({ onAdd, afterAdd }: Props) {
                 >
                     {loading ? "Adding…" : "Add Student"}
                 </Button>
-
-                <Typography variant="caption" color="text.secondary">
-                    Tip: If the student ID already exists, the server will reject it.
-                </Typography>
             </Box>
         </Box>
     );

@@ -45,7 +45,7 @@ export const theme = createTheme({
         },
     },
 
-    shape: { borderRadius: 22 },
+    shape: { borderRadius: 10 },
 
     typography: {
         fontFamily:

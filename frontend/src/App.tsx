@@ -87,35 +87,32 @@ export default function App() {
                         <Paper
                             elevation={0}
                             sx={{
-                                px: 2,
+                                px: 4,
                                 py: 0.8,
-                                borderRadius: 999,
-                                background: "rgba(255,255,255,0.06)",
+                                borderRadius: 20,
+                                background: "rgba(255,255,255,0.0)",
                                 maxWidth: "100%",
                             }}
                         >
                             <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                                Backend
+                                Winter 2026
                             </Typography>
                             <Typography variant="caption" sx={{ opacity: 0.7, display: "block" }}>
-                                localhost:4000/graphql
+                                SOEN 487
                             </Typography>
                         </Paper>
 
                         <Paper
                             elevation={0}
                             sx={{
-                                px: 2,
-                                py: 0.8,
-                                borderRadius: 999,
-                                background: "rgba(255,255,255,0.06)",
+                                px: 4,
+                                py: 1.8,
+                                borderRadius: 20,
+                                background: "rgba(255,255,255,0.0)",
                             }}
                         >
                             <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                                Total Students
-                            </Typography>
-                            <Typography variant="caption" sx={{ opacity: 0.7, display: "block" }}>
-                                {totalStudents}
+                                Assignment 3
                             </Typography>
                         </Paper>
                     </Box>
@@ -126,7 +123,7 @@ export default function App() {
                     elevation={0}
                     sx={{
                         p: { xs: 2, sm: 2.5, md: 3.5 },
-                        borderRadius: { xs: 4, md: 6 },
+                        borderRadius: { xs: 4, md: 4 },
                         background: COLORS.cream,
                         color: "#0b0b0c",
                         border: "none",
@@ -142,10 +139,10 @@ export default function App() {
                     >
                         <Box>
                             <Typography variant="h6" sx={{ fontWeight: 900 }}>
-                                Your Students
+                                Students Overview
                             </Typography>
                             <Typography variant="body2" sx={{ opacity: 0.8 }}>
-                                Quick snapshot of the database (domain student IDs, first/last name, credits).
+                                View of the enrolled students showing student IDs, name, and number of credits.
                             </Typography>
 
                             <Divider sx={{ my: 2, borderColor: "rgba(0,0,0,0.12)" }} />
@@ -184,7 +181,7 @@ export default function App() {
                                 {totalStudents}
                             </Typography>
                             <Typography variant="body2" sx={{ opacity: 0.75 }}>
-                                students in DB
+                                students enrolled
                             </Typography>
 
                             <Box
@@ -219,7 +216,7 @@ export default function App() {
                     <Box
                         sx={{
                             background: COLORS.brown,
-                            borderRadius: { xs: 4, md: 6 },
+                            borderRadius: { xs: 4, md: 4 },
                             p: { xs: 0.75, md: 1.25 },
                             border: `1px solid ${COLORS.border}`,
                             overflow: "hidden", // keeps inner hover transforms tidy on small screens
@@ -238,7 +235,7 @@ export default function App() {
                         <Box
                             sx={{
                                 background: "rgba(230,255,0,0.10)",
-                                borderRadius: { xs: 4, md: 6 },
+                                borderRadius: { xs: 4, md: 4 },
                                 p: { xs: 0.75, md: 1.25 },
                                 border: `1px solid rgba(230,255,0,0.18)`,
                                 overflow: "hidden",
@@ -250,7 +247,7 @@ export default function App() {
                         <Box
                             sx={{
                                 background: "rgba(255,106,0,0.12)",
-                                borderRadius: { xs: 4, md: 6 },
+                                borderRadius: { xs: 4, md: 4 },
                                 p: { xs: 0.75, md: 1.25 },
                                 border: `1px solid rgba(255,106,0,0.22)`,
                                 overflow: "hidden",
