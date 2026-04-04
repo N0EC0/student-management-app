@@ -8,10 +8,10 @@
  * - Badge-style result pills for success / not found / error
  */
 
-import {Alert, Box, Button, CircularProgress, TextField, Typography} from "@mui/material";
+import { Alert, Box, Button, CircularProgress, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import type { Student } from "../types";
-import {COLORS} from "../theme.ts";
+import { COLORS } from "../theme.ts";
 
 type Props = {
     onFind: (id: string) => Promise<Student | null>;
@@ -59,7 +59,15 @@ export default function FindStudentCard({ onFind }: Props) {
                     fullWidth
                     label="Student ID"
                     value={searchId}
-                    onChange={(e) => setSearchId(e.target.value)}
+                    onChange={(e) => {
+                        const v = e.target.value;
+                        setSearchId(v);
+
+                        // B) Clear badges/messages on ANY change (not only when empty).
+                        // This removes stale FOUND / NOT FOUND / ERROR state as the user edits.
+                        setError(null);
+                        setFound(undefined);
+                    }}
                     placeholder="example: 01234567"
                 />
                 <Button
@@ -149,7 +157,8 @@ export default function FindStudentCard({ onFind }: Props) {
                                             letterSpacing: 0.6,
                                             fontSize: 12,
                                             backgroundColor: "rgba(230,255,0,0.25)",
-                                            color: COLORS.text,                                            flexShrink: 0,
+                                            color: COLORS.text,
+                                            flexShrink: 0,
                                         }}
                                     >
                                         FOUND
@@ -212,7 +221,7 @@ export default function FindStudentCard({ onFind }: Props) {
                                     >
                                         NOT FOUND
                                     </Box>
-                                    <Typography variant="body2" sx={{ opacity: 0.9, color: COLORS.text, }}>
+                                    <Typography variant="body2" sx={{ opacity: 0.9, color: COLORS.text }}>
                                         No student found for that ID.
                                     </Typography>
                                 </Box>

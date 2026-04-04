@@ -7,10 +7,10 @@
  * - Does NOT enforce strict ID format (to avoid losing points)
  */
 
-import { Alert, Box, Button,  TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, TextField, Typography } from "@mui/material";
 import { useMemo, useState } from "react";
 import type { Student } from "../types";
-import {COLORS} from "../theme.ts";
+import { COLORS } from "../theme.ts";
 
 type Props = {
     onAdd: (input: {
@@ -93,21 +93,29 @@ export default function AddStudentCard({ onAdd, afterAdd }: Props) {
                 <TextField
                     label="Student ID"
                     value={newId}
-                    onChange={(e) => setNewId(e.target.value)}
+                    onChange={(e) => {
+                        const v = e.target.value;
+                        setNewId(v);
+
+                        // B) Clear server warning on ANY change (prevents stale error message)
+                        setServerError(null);
+                    }}
                     placeholder="example: 01234567"
                     // Only show errors after submit attempt
                     error={attemptedSubmit && !idValid}
                     helperText={
-                        attemptedSubmit && !idValid
-                            ? "Student ID is required."
-                            : "8 digit unique identifier for student ID"
+                        attemptedSubmit && !idValid ? "Student ID is required." : "8 digit unique identifier for student ID"
                     }
                 />
 
                 <TextField
                     label="First Name"
                     value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
+                    onChange={(e) => {
+                        setFirstName(e.target.value);
+                        // Clear server warning on any edit
+                        setServerError(null);
+                    }}
                     error={attemptedSubmit && !firstValid}
                     helperText={attemptedSubmit && !firstValid ? "First name is required." : "Example: Harry"}
                 />
@@ -115,7 +123,11 @@ export default function AddStudentCard({ onAdd, afterAdd }: Props) {
                 <TextField
                     label="Last Name"
                     value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
+                    onChange={(e) => {
+                        setLastName(e.target.value);
+                        // Clear server warning on any edit
+                        setServerError(null);
+                    }}
                     error={attemptedSubmit && !lastValid}
                     helperText={attemptedSubmit && !lastValid ? "Last name is required." : "Example: Potter"}
                 />
@@ -123,7 +135,11 @@ export default function AddStudentCard({ onAdd, afterAdd }: Props) {
                 <TextField
                     label="Completed Credit"
                     value={credits}
-                    onChange={(e) => setCredits(e.target.value)}
+                    onChange={(e) => {
+                        setCredits(e.target.value);
+                        // Clear server warning on any edit
+                        setServerError(null);
+                    }}
                     inputMode="numeric"
                     placeholder="example: 45"
                     error={attemptedSubmit && (!credits.trim() || !creditsValid)}
@@ -141,12 +157,12 @@ export default function AddStudentCard({ onAdd, afterAdd }: Props) {
                         icon={false}
                         sx={{
                             mt: 1,
-                            borderRadius: 2.4,
+                            borderRadius: 999,
                             border: "1px solid rgba(255,64,64,0.45)",
                             backgroundColor: "rgba(255,64,64,0.12)",
                             py: 0.5,
                             "& .MuiAlert-message": { width: "100%" },
-                            marginBottom: 2,
+                            mb: 1,
                         }}
                     >
                         <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
@@ -154,32 +170,26 @@ export default function AddStudentCard({ onAdd, afterAdd }: Props) {
                                 sx={{
                                     px: 1.2,
                                     py: 0.35,
-                                    borderRadius: 2.5,
+                                    borderRadius: 999,
                                     fontWeight: 900,
                                     letterSpacing: 0.6,
                                     fontSize: 12,
                                     backgroundColor: "rgba(255,64,64,0.25)",
                                     flexShrink: 0,
-                                    color: COLORS.text
+                                    color: COLORS.text,
                                 }}
                             >
                                 ERROR
                             </Box>
 
-                            <Typography variant="body2" sx={{ opacity: 0.9, minWidth: 0, color: COLORS.text
-                            }}>
+                            <Typography variant="body2" sx={{ opacity: 0.9, minWidth: 0, color: COLORS.text }}>
                                 Could not add student: {serverError}
                             </Typography>
                         </Box>
                     </Alert>
                 )}
 
-                <Button
-                    variant="contained"
-                    onClick={handleAdd}
-                    disabled={loading}
-                    sx={{ py: 1.1, fontWeight: 750 }}
-                >
+                <Button variant="contained" onClick={handleAdd} disabled={loading} sx={{ py: 1.1, fontWeight: 750 }}>
                     {loading ? "Adding…" : "Add Student"}
                 </Button>
             </Box>
