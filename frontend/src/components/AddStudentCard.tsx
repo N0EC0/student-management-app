@@ -7,7 +7,7 @@
  * - Does NOT enforce strict ID format (to avoid losing points)
  */
 
-import { Alert, Box, Button, Card, CardContent, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, TextField, Typography } from "@mui/material";
 import { useMemo, useState } from "react";
 import type { Student } from "../types";
 
@@ -83,74 +83,72 @@ export default function AddStudentCard({ onAdd, afterAdd }: Props) {
     }
 
     return (
-        <Card variant="outlined">
-            <CardContent>
-                <Typography variant="h6" sx={{ fontWeight: 750 }}>
-                    Add New Student
+        <Box sx={{ p: { xs: 2, sm: 2.5, md: 3 } }}>
+            <Typography variant="h6" sx={{ fontWeight: 750 }}>
+                Add New Student
+            </Typography>
+
+            <Box sx={{ display: "grid", gap: 1.5, mt: 2 }}>
+                <TextField
+                    label="Student ID"
+                    value={newId}
+                    onChange={(e) => setNewId(e.target.value)}
+                    placeholder="e.g., S12345"
+                    // Only show errors after submit attempt
+                    error={attemptedSubmit && !idValid}
+                    helperText={
+                        attemptedSubmit && !idValid
+                            ? "Student ID is required."
+                            : "This is the student's own ID (not MongoDB _id)."
+                    }
+                />
+
+                <TextField
+                    label="First Name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    error={attemptedSubmit && !firstValid}
+                    helperText={attemptedSubmit && !firstValid ? "First name is required." : "Example: Noémie"}
+                />
+
+                <TextField
+                    label="Last Name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    error={attemptedSubmit && !lastValid}
+                    helperText={attemptedSubmit && !lastValid ? "Last name is required." : "Example: Corneillier"}
+                />
+
+                <TextField
+                    label="Completed Credit Hours"
+                    value={credits}
+                    onChange={(e) => setCredits(e.target.value)}
+                    inputMode="numeric"
+                    placeholder="e.g., 45"
+                    error={attemptedSubmit && (!credits.trim() || !creditsValid)}
+                    helperText={
+                        attemptedSubmit && (!credits.trim() || !creditsValid)
+                            ? "Credits must be a non-negative number."
+                            : "Enter a number like 0, 15, 30..."
+                    }
+                />
+
+                {/* Server-side error (e.g., duplicate ID) */}
+                {serverError && <Alert severity="error">Could not add student: {serverError}</Alert>}
+
+                <Button
+                    variant="contained"
+                    onClick={handleAdd}
+                    disabled={loading}
+                    sx={{ py: 1.1, fontWeight: 750 }}
+                >
+                    {loading ? "Adding…" : "Add Student"}
+                </Button>
+
+                <Typography variant="caption" color="text.secondary">
+                    Tip: If the student ID already exists, the server will reject it.
                 </Typography>
-
-                <Box sx={{ display: "grid", gap: 1.5, mt: 2 }}>
-                    <TextField
-                        label="Student ID"
-                        value={newId}
-                        onChange={(e) => setNewId(e.target.value)}
-                        placeholder="e.g., S12345"
-                        // Only show errors after submit attempt
-                        error={attemptedSubmit && !idValid}
-                        helperText={
-                            attemptedSubmit && !idValid
-                                ? "Student ID is required."
-                                : "This is the student's own ID (not MongoDB _id)."
-                        }
-                    />
-
-                    <TextField
-                        label="First Name"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                        error={attemptedSubmit && !firstValid}
-                        helperText={attemptedSubmit && !firstValid ? "First name is required." : "Example: Noémie"}
-                    />
-
-                    <TextField
-                        label="Last Name"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                        error={attemptedSubmit && !lastValid}
-                        helperText={attemptedSubmit && !lastValid ? "Last name is required." : "Example: Corneillier"}
-                    />
-
-                    <TextField
-                        label="Completed Credit Hours"
-                        value={credits}
-                        onChange={(e) => setCredits(e.target.value)}
-                        inputMode="numeric"
-                        placeholder="e.g., 45"
-                        error={attemptedSubmit && (!credits.trim() || !creditsValid)}
-                        helperText={
-                            attemptedSubmit && (!credits.trim() || !creditsValid)
-                                ? "Credits must be a non-negative number."
-                                : "Enter a number like 0, 15, 30..."
-                        }
-                    />
-
-                    {/* Server-side error (e.g., duplicate ID) */}
-                    {serverError && <Alert severity="error">Could not add student: {serverError}</Alert>}
-
-                    <Button
-                        variant="contained"
-                        onClick={handleAdd}
-                        disabled={loading}
-                        sx={{ py: 1.1, fontWeight: 750 }}
-                    >
-                        {loading ? "Adding…" : "Add Student"}
-                    </Button>
-
-                    <Typography variant="caption" color="text.secondary">
-                        Tip: If the student ID already exists, the server will reject it.
-                    </Typography>
-                </Box>
-            </CardContent>
-        </Card>
+            </Box>
+        </Box>
     );
 }

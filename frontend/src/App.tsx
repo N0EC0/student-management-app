@@ -1,122 +1,266 @@
 /**
  * App.tsx
- * - Composes the page from smaller components.
- * - Owns the shared state for the "all students" list (so refresh is centralized).
+ * - Dashboard layout inspired by the provided mockup:
+ *   - dark background
+ *   - large top summary card
+ *   - 2-column grid underneath
+ * - Uses existing components (separation stays TA-friendly)
+ *  * App.tsx (responsive)
+ *  * - Mobile: single column stacked sections
+ *  * - Desktop: 2-column dashboard
  */
 
-import { useMemo, useState } from "react";
-import {
-  AppBar,
-  Box,
-  Container,
-  CssBaseline,
-  Divider,
-  Paper,
-  ThemeProvider,
-  Toolbar,
-  Typography,
-  createTheme,
-} from "@mui/material";
+import { useState } from "react";
+import { Box, Container, Divider, Paper, Typography } from "@mui/material";
 
 import type { Student } from "./types";
 import { createStudent, fetchAllStudents, fetchStudentById } from "./graphql";
-
 import { AllStudentsCard, FindStudentCard, AddStudentCard } from "./components";
+import { COLORS } from "./theme";
 
 export default function App() {
-  // Theme for nice visuals
-  const theme = useMemo(
-      () =>
-          createTheme({
-            palette: { mode: "light", primary: { main: "#1a73e8" } },
-            shape: { borderRadius: 14 },
-          }),
-      []
-  );
+    const [students, setStudents] = useState<Student[]>([]);
+    const [allLoading, setAllLoading] = useState(false);
+    const [allError, setAllError] = useState<string | null>(null);
 
-  // Shared state: all students list
-  const [students, setStudents] = useState<Student[]>([]);
-  const [allLoading, setAllLoading] = useState(false);
-  const [allError, setAllError] = useState<string | null>(null);
-
-  // Load once on first render (simple pattern)
-  const [initialLoaded, setInitialLoaded] = useState(false);
-  if (!initialLoaded) {
-    setInitialLoaded(true);
-    void refreshStudents();
-  }
-
-  async function refreshStudents() {
-    try {
-      setAllError(null);
-      setAllLoading(true);
-      const all = await fetchAllStudents();
-      setStudents(all);
-    } catch (e) {
-      setAllError(e instanceof Error ? e.message : String(e));
-    } finally {
-      setAllLoading(false);
+    const [initialLoaded, setInitialLoaded] = useState(false);
+    if (!initialLoaded) {
+        setInitialLoaded(true);
+        void refreshStudents();
     }
-  }
 
-  return (
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
+    async function refreshStudents() {
+        try {
+            setAllError(null);
+            setAllLoading(true);
+            const all = await fetchAllStudents();
+            setStudents(all);
+        } catch (e) {
+            setAllError(e instanceof Error ? e.message : String(e));
+        } finally {
+            setAllLoading(false);
+        }
+    }
 
-        <AppBar position="sticky" elevation={0} sx={{ borderBottom: "1px solid #eaeaea" }}>
-          <Toolbar>
-            <Typography variant="h6" sx={{ fontWeight: 700 }}>
-              Student Management (GraphQL)
-            </Typography>
-            <Box sx={{ flex: 1 }} />
-            <Typography variant="body2" sx={{ opacity: 0.85 }}>
-              Backend: localhost:4000/graphql
-            </Typography>
-          </Toolbar>
-        </AppBar>
+    const totalStudents = students.length;
+    const totalCredits = students.reduce((sum, s) => sum + s.completedCreditHours, 0);
+    const avgCredits = totalStudents ? Math.round((totalCredits / totalStudents) * 10) / 10 : 0;
 
-        <Box sx={{ minHeight: "100vh", background: "#fafafa", py: 5 }}>
-          <Container maxWidth="lg">
-            <Paper elevation={0} sx={{ p: { xs: 2.5, md: 4 }, border: "1px solid #ededed" }}>
-              <Typography variant="h4" sx={{ fontWeight: 800 }}>
-                Dashboard
-              </Typography>
-              <Typography variant="body1" color="text.secondary" sx={{ mt: 1 }}>
-                View all students, search by student ID, and add a new student.
-              </Typography>
+    return (
+        <Box
+            sx={{
+                minHeight: "100vh",
+                background: COLORS.bg,
+                color: COLORS.text,
+                py: { xs: 2.5, sm: 3.5, md: 5 },
+            }}
+        >
+            <Container maxWidth="lg">
+                {/* Top header: stacks on mobile */}
+                <Box
+                    sx={{
+                        display: "flex",
+                        flexDirection: { xs: "column", sm: "row" },
+                        alignItems: { xs: "flex-start", sm: "center" },
+                        justifyContent: "space-between",
+                        gap: 2,
+                        mb: 2,
+                    }}
+                >
+                    <Box>
+                        <Typography variant="overline" sx={{ opacity: 0.8, letterSpacing: 1.6 }}>
+                            STUDENT MANAGEMENT
+                        </Typography>
+                        <Typography variant="h4">Dashboard</Typography>
+                    </Box>
 
-              <Divider sx={{ my: 3 }} />
+                    {/* Pills: wrap naturally on mobile */}
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: 1,
+                            flexWrap: "wrap",
+                            justifyContent: { xs: "flex-start", sm: "flex-end" },
+                            width: { xs: "100%", sm: "auto" },
+                        }}
+                    >
+                        <Paper
+                            elevation={0}
+                            sx={{
+                                px: 2,
+                                py: 0.8,
+                                borderRadius: 999,
+                                background: "rgba(255,255,255,0.06)",
+                                maxWidth: "100%",
+                            }}
+                        >
+                            <Typography variant="body2" sx={{ opacity: 0.85 }}>
+                                Backend
+                            </Typography>
+                            <Typography variant="caption" sx={{ opacity: 0.7, display: "block" }}>
+                                localhost:4000/graphql
+                            </Typography>
+                        </Paper>
 
-              {/* Page layout */}
-              <Box
-                  sx={{
-                    display: "grid",
-                    gridTemplateColumns: { xs: "1fr", md: "1.2fr 0.8fr" },
-                    gap: 3,
-                    alignItems: "start",
-                  }}
-              >
-                {/* Left: All Students */}
-                <AllStudentsCard
-                    students={students}
-                    loading={allLoading}
-                    error={allError}
-                    onRefresh={refreshStudents}
-                />
-
-                {/* Right: Find + Add */}
-                <Box sx={{ display: "grid", gap: 3 }}>
-                  <FindStudentCard onFind={fetchStudentById} />
-
-                  <AddStudentCard
-                      onAdd={createStudent}
-                      afterAdd={refreshStudents}
-                  />
+                        <Paper
+                            elevation={0}
+                            sx={{
+                                px: 2,
+                                py: 0.8,
+                                borderRadius: 999,
+                                background: "rgba(255,255,255,0.06)",
+                            }}
+                        >
+                            <Typography variant="body2" sx={{ opacity: 0.85 }}>
+                                Total Students
+                            </Typography>
+                            <Typography variant="caption" sx={{ opacity: 0.7, display: "block" }}>
+                                {totalStudents}
+                            </Typography>
+                        </Paper>
+                    </Box>
                 </Box>
-              </Box>
-            </Paper>
-          </Container>
+
+                {/* HERO: stacks content on mobile */}
+                <Paper
+                    elevation={0}
+                    sx={{
+                        p: { xs: 2, sm: 2.5, md: 3.5 },
+                        borderRadius: { xs: 4, md: 6 },
+                        background: COLORS.cream,
+                        color: "#0b0b0c",
+                        border: "none",
+                    }}
+                >
+                    <Box
+                        sx={{
+                            display: "grid",
+                            gridTemplateColumns: { xs: "1fr", md: "1fr auto" },
+                            gap: { xs: 2.5, md: 2 },
+                            alignItems: "center",
+                        }}
+                    >
+                        <Box>
+                            <Typography variant="h6" sx={{ fontWeight: 900 }}>
+                                Your Students
+                            </Typography>
+                            <Typography variant="body2" sx={{ opacity: 0.8 }}>
+                                Quick snapshot of the database (domain student IDs, first/last name, credits).
+                            </Typography>
+
+                            <Divider sx={{ my: 2, borderColor: "rgba(0,0,0,0.12)" }} />
+
+                            <Box sx={{ display: "grid", gap: 1.2 }}>
+                                <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
+                                    <Typography variant="body2">Total students</Typography>
+                                    <Typography variant="body2" sx={{ fontWeight: 800 }}>
+                                        {totalStudents}
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
+                                    <Typography variant="body2">Total completed credits</Typography>
+                                    <Typography variant="body2" sx={{ fontWeight: 800 }}>
+                                        {totalCredits}
+                                    </Typography>
+                                </Box>
+                                <Box sx={{ display: "flex", justifyContent: "space-between", gap: 2 }}>
+                                    <Typography variant="body2">Average credits</Typography>
+                                    <Typography variant="body2" sx={{ fontWeight: 800 }}>
+                                        {avgCredits}
+                                    </Typography>
+                                </Box>
+                            </Box>
+                        </Box>
+
+                        <Box sx={{ textAlign: { xs: "left", md: "right" } }}>
+                            <Typography
+                                sx={{
+                                    fontSize: { xs: 44, sm: 56, md: 72 },
+                                    fontWeight: 950,
+                                    letterSpacing: -2,
+                                    lineHeight: 1,
+                                }}
+                            >
+                                {totalStudents}
+                            </Typography>
+                            <Typography variant="body2" sx={{ opacity: 0.75 }}>
+                                students in DB
+                            </Typography>
+
+                            <Box
+                                sx={{
+                                    mt: 2,
+                                    display: "inline-block",
+                                    px: 2,
+                                    py: 0.8,
+                                    borderRadius: 999,
+                                    background: COLORS.neon,
+                                    color: "#0b0b0c",
+                                    fontWeight: 900,
+                                }}
+                            >
+                                Ready for demo
+                            </Box>
+                        </Box>
+                    </Box>
+                </Paper>
+
+                {/* MAIN GRID: stacks on mobile */}
+                <Box
+                    sx={{
+                        mt: { xs: 2.5, md: 3 },
+                        display: "grid",
+                        gridTemplateColumns: { xs: "1fr", md: "1.2fr 0.8fr" },
+                        gap: { xs: 2, md: 3 },
+                        alignItems: "start",
+                    }}
+                >
+                    {/* Left: list */}
+                    <Box
+                        sx={{
+                            background: COLORS.brown,
+                            borderRadius: { xs: 4, md: 6 },
+                            p: { xs: 0.75, md: 1.25 },
+                            border: `1px solid ${COLORS.border}`,
+                            overflow: "hidden", // keeps inner hover transforms tidy on small screens
+                        }}
+                    >
+                        <AllStudentsCard
+                            students={students}
+                            loading={allLoading}
+                            error={allError}
+                            onRefresh={refreshStudents}
+                        />
+                    </Box>
+
+                    {/* Right: find + add */}
+                    <Box sx={{ display: "grid", gap: { xs: 2, md: 3 } }}>
+                        <Box
+                            sx={{
+                                background: "rgba(230,255,0,0.10)",
+                                borderRadius: { xs: 4, md: 6 },
+                                p: { xs: 0.75, md: 1.25 },
+                                border: `1px solid rgba(230,255,0,0.18)`,
+                                overflow: "hidden",
+                            }}
+                        >
+                            <FindStudentCard onFind={fetchStudentById} />
+                        </Box>
+
+                        <Box
+                            sx={{
+                                background: "rgba(255,106,0,0.12)",
+                                borderRadius: { xs: 4, md: 6 },
+                                p: { xs: 0.75, md: 1.25 },
+                                border: `1px solid rgba(255,106,0,0.22)`,
+                                overflow: "hidden",
+                            }}
+                        >
+                            <AddStudentCard onAdd={createStudent} afterAdd={refreshStudents} />
+                        </Box>
+                    </Box>
+                </Box>
+            </Container>
         </Box>
-      </ThemeProvider>
-  );
+    );
 }
