@@ -7,15 +7,13 @@
  * 2) Retrieve a student by ID
  * 3) Add new student
  *
- * MongoDB:
- * - Uses the official MongoDB driver (mongodb package)
- * - Loads MONGODB_URI (and optional MONGODB_DB) from .env
- *
- * Notes:
- * - This is intentionally minimal and only implements the required operations.
+ * IMPORTANT semantic change:
+ * - Student has its own domain ID: studentId (user-entered)
+ * - MongoDB still stores its own internal _id, but GraphQL "id" maps to studentId
+ * - Student name is split into firstName and lastName
  */
 
-import "dotenv/config"; // Loads environment variables from .env into process.env
+import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { ApolloServer } from "@apollo/server";
@@ -23,26 +21,30 @@ import { expressMiddleware } from "@apollo/server/express4";
 import { MongoClient, ObjectId } from "mongodb";
 
 // --------------------
-// Types (TypeScript)
-// --------------------
-
 // GraphQL-facing type (what the API returns)
+// --------------------
 type Student = {
-    id: string;
-    name: string;
+    id: string; // domain student id == studentId in DB
+    firstName: string;
+    lastName: string;
     completedCreditHours: number;
 };
 
-// MongoDB document type (what is stored/read from MongoDB)
+// --------------------
+// MongoDB document types
+// --------------------
 type StudentDoc = {
-    _id: ObjectId;
-    name: string;
+    _id: ObjectId; // Mongo internal id
+    studentId: string; // domain id (user-entered)
+    firstName: string;
+    lastName: string;
     completedCreditHours: number;
 };
 
-// MongoDB insert type (what we send to insertOne; MongoDB generates _id)
 type StudentInsert = {
-    name: string;
+    studentId: string;
+    firstName: string;
+    lastName: string;
     completedCreditHours: number;
 };
 
@@ -50,21 +52,19 @@ type StudentInsert = {
 // MongoDB setup
 // --------------------
 const MONGODB_URI = process.env.MONGODB_URI;
-if (!MONGODB_URI) {
-    throw new Error("Missing MONGODB_URI in environment (.env).");
-}
+if (!MONGODB_URI) throw new Error("Missing MONGODB_URI in environment (.env).");
 
-// Optional DB name override (useful with Atlas URIs that don't specify a default DB)
 const DB_NAME = process.env.MONGODB_DB || "a3";
 const COLLECTION = "students";
 
 const client = new MongoClient(MONGODB_URI);
 
-// Helper: map MongoDB document => GraphQL Student
+// Map Mongo doc -> GraphQL Student
 function toStudent(doc: StudentDoc): Student {
     return {
-        id: doc._id.toHexString(),
-        name: doc.name,
+        id: doc.studentId,
+        firstName: doc.firstName,
+        lastName: doc.lastName,
         completedCreditHours: doc.completedCreditHours,
     };
 }
@@ -74,8 +74,10 @@ function toStudent(doc: StudentDoc): Student {
 // --------------------
 const typeDefs = `#graphql
   type Student {
+    # Domain student ID (NOT MongoDB _id)
     id: ID!
-    name: String!
+    firstName: String!
+    lastName: String!
     completedCreditHours: Int!
   }
 
@@ -83,13 +85,18 @@ const typeDefs = `#graphql
     # 1) Retrieve all students
     students: [Student!]!
 
-    # 2) Retrieve a student by ID
+    # 2) Retrieve a student by ID (domain student ID)
     student(id: ID!): Student
   }
 
   type Mutation {
-    # 3) Add new student
-    addStudent(name: String!, completedCreditHours: Int!): Student!
+    # 3) Add new student (domain student ID is user-entered)
+    addStudent(
+      id: ID!
+      firstName: String!
+      lastName: String!
+      completedCreditHours: Int!
+    ): Student!
   }
 `;
 
@@ -98,46 +105,71 @@ const typeDefs = `#graphql
 // --------------------
 const resolvers = {
     Query: {
-        // 1) Retrieve all students
         students: async (): Promise<Student[]> => {
             const collection = client.db(DB_NAME).collection<StudentDoc>(COLLECTION);
-
             const docs = await collection.find({}).toArray();
             return docs.map(toStudent);
         },
 
-        // 2) Retrieve a student by ID
         student: async (
             _parent: unknown,
             args: { id: string }
         ): Promise<Student | null> => {
             const collection = client.db(DB_NAME).collection<StudentDoc>(COLLECTION);
 
-            // If the provided ID isn't a valid MongoDB ObjectId, return null.
-            if (!ObjectId.isValid(args.id)) return null;
-
-            const doc = await collection.findOne({ _id: new ObjectId(args.id) });
+            // Query by domain studentId (NOT Mongo _id)
+            const doc = await collection.findOne({ studentId: args.id });
             return doc ? toStudent(doc) : null;
         },
     },
 
     Mutation: {
-        // 3) Add new student
         addStudent: async (
             _parent: unknown,
-            args: { name: string; completedCreditHours: number }
+            args: { id: string; firstName: string; lastName: string; completedCreditHours: number }
         ): Promise<Student> => {
-            // Use StudentInsert here (no _id) because MongoDB generates _id for inserts.
-            const collection = client.db(DB_NAME).collection<StudentInsert>(COLLECTION);
+            const trimmedId = args.id.trim();
+            const trimmedFirst = args.firstName.trim();
+            const trimmedLast = args.lastName.trim();
 
-            const result = await collection.insertOne({
-                name: args.name,
-                completedCreditHours: args.completedCreditHours,
-            });
+            // Minimal validation (server-side)
+            if (!trimmedId) throw new Error("Student id cannot be empty.");
+            if (!trimmedFirst) throw new Error("firstName cannot be empty.");
+            if (!trimmedLast) throw new Error("lastName cannot be empty.");
+            if (!Number.isFinite(args.completedCreditHours) || args.completedCreditHours < 0) {
+                throw new Error("completedCreditHours must be a non-negative number.");
+            }
 
+            // Ensure uniqueness of domain studentId
+            const readCollection = client.db(DB_NAME).collection<StudentDoc>(COLLECTION);
+            const existing = await readCollection.findOne({ studentId: trimmedId });
+            if (existing) {
+                throw new Error(`Student id "${trimmedId}" already exists.`);
+            }
+
+            // Insert uses StudentInsert (no _id)
+            const insertCollection = client.db(DB_NAME).collection<StudentInsert>(COLLECTION);
+
+            try {
+                await insertCollection.insertOne({
+                    studentId: trimmedId,
+                    firstName: trimmedFirst,
+                    lastName: trimmedLast,
+                    completedCreditHours: args.completedCreditHours,
+                });
+            } catch (err: unknown) {
+                // Mongo duplicate key error (unique index violation)
+                if (err && typeof err === "object" && "code" in err && (err as any).code === 11000) {
+                    throw new Error(`Student id "${trimmedId}" already exists.`);
+                }
+                throw err;
+            }
+
+            // Return the created student (GraphQL view)
             return {
-                id: result.insertedId.toHexString(),
-                name: args.name,
+                id: trimmedId,
+                firstName: trimmedFirst,
+                lastName: trimmedLast,
                 completedCreditHours: args.completedCreditHours,
             };
         },
@@ -145,8 +177,15 @@ const resolvers = {
 };
 
 async function bootstrap() {
-    // Connect once on startup and reuse the same connection.
     await client.connect();
+
+    // Ensure studentId is unique at the database level.
+    // This prevents duplicates even if two requests happen at the same time.
+    // Note: createIndex is safe to run on every startup (MongoDB will keep the same index).
+    await client
+        .db(DB_NAME)
+        .collection<StudentDoc>(COLLECTION)
+        .createIndex({ studentId: 1 }, { unique: true });
 
     const server = new ApolloServer({
         typeDefs,
@@ -155,12 +194,9 @@ async function bootstrap() {
     await server.start();
 
     const app = express();
-
-    // Middleware
     app.use(cors());
     app.use(express.json());
 
-    // GraphQL endpoint
     app.use("/graphql", expressMiddleware(server));
 
     const port = process.env.PORT ? Number(process.env.PORT) : 4000;
@@ -168,10 +204,10 @@ async function bootstrap() {
     app.listen(port, () => {
         console.log(`✅ GraphQL running at http://localhost:${port}/graphql`);
         console.log(`✅ Connected to MongoDB database "${DB_NAME}"`);
+        console.log(`✅ Ensured unique index on students.studentId`);
     });
 }
 
-// Graceful shutdown (helpful during development)
 process.on("SIGINT", async () => {
     await client.close();
     process.exit(0);
