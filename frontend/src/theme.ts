@@ -135,20 +135,55 @@ export const theme = createTheme({
             },
         },
 
-        // Toggle buttons used in the “Sort” toggle
+        MuiToggleButtonGroup: {
+            styleOverrides: {
+                root: {
+                    // Outer segmented-control container
+                    borderRadius: 999,
+                    padding: 3,
+                    border: "1px solid rgba(255,255,255,0.18)",
+                    height: 36,
+
+                    // remove default grouped borders
+                    "& .MuiToggleButtonGroup-grouped": {
+                        margin: 0,
+                        border: 0,
+                        borderRadius: 999,
+                    },
+                    "& .MuiToggleButtonGroup-grouped:not(:first-of-type)": {
+                        borderLeft: 0,
+                    },
+                },
+            },
+        },
         MuiToggleButton: {
             styleOverrides: {
                 root: {
                     borderRadius: 999,
-                    borderColor: "rgba(255,255,255,0.18)",
-                    color: "rgba(255,255,255,0.82)",
+                    border: "none",
+                    // padding: "8px 16px",
+                    minWidth: 92,
+                    maxHeight: 40,
+                    fontWeight: 900,
+                    letterSpacing: 0.2,
+                    textTransform: "none",
+
+                    // default (unselected)
+                    color: "rgba(255,255,255,0.78)",
+                    backgroundColor: "transparent",
+                    transition: "background-color 160ms ease, color 160ms ease",
+
+                    "&:hover": {
+                        backgroundColor: "rgba(255,255,255,0.06)",
+                    },
+
+                    // selected segment (like “Now”)
                     "&.Mui-selected": {
-                        backgroundColor: "rgba(230,255,0,0.18)",
-                        color: "rgba(255,255,255,0.95)",
-                        borderColor: "rgba(230,255,0,0.35)",
+                        backgroundColor: COLORS.cream,
+                        color: "#0b0b0c",
                     },
                     "&.Mui-selected:hover": {
-                        backgroundColor: "rgba(230,255,0,0.24)",
+                        backgroundColor: "#ded6cd", // slightly darker cream hover
                     },
                 },
             },

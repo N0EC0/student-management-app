@@ -98,12 +98,6 @@ export default function AllStudentsCard({ students, loading, error, onRefresh }:
                         onChange={(_e, v: SortMode | null) => {
                             if (v) setSortMode(v);
                         }}
-                        sx={{
-                            "& .MuiToggleButton-root": {
-                                borderRadius: 999,
-                                px: 1.5,
-                            },
-                        }}
                     >
                         <ToggleButton value="name">Name</ToggleButton>
                         <ToggleButton value="credits">Credits</ToggleButton>
