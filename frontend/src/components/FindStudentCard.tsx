@@ -133,8 +133,8 @@ export default function FindStudentCard({ onFind }: Props) {
                                 sx={{
                                     mt: 2,
                                     borderRadius: 2.5,
-                                    border: "1px solid rgba(230,255,0,0.35)",
-                                    backgroundColor: "rgba(230,255,0,0.05)",
+                                    border: "1px solid rgba(255,255,255,0.35)",
+                                    backgroundColor: "rgba(250,250,250,0.05)",
                                     py: 0.5,
                                     "& .MuiAlert-message": { width: "100%" },
                                     color: COLORS.text,
@@ -214,7 +214,7 @@ export default function FindStudentCard({ onFind }: Props) {
                                             fontWeight: 900,
                                             letterSpacing: 0.6,
                                             fontSize: 12,
-                                            backgroundColor: "rgba(233,225,216,0.18)",
+                                            backgroundColor: COLORS.orange,
                                             flexShrink: 0,
                                             color: COLORS.text,
                                         }}

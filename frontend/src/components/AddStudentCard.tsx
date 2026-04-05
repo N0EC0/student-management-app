@@ -157,9 +157,9 @@ export default function AddStudentCard({ onAdd, afterAdd }: Props) {
                         icon={false}
                         sx={{
                             mt: 1,
-                            borderRadius: 999,
-                            border: "1px solid rgba(255,64,64,0.45)",
-                            backgroundColor: "rgba(255,64,64,0.12)",
+                            borderRadius: 2,
+                            border: "1px solid rgba(255,89,0,0.55)",
+                            backgroundColor: "rgba(255,89,0,0.12)",
                             py: 0.5,
                             "& .MuiAlert-message": { width: "100%" },
                             mb: 1,
@@ -170,11 +170,11 @@ export default function AddStudentCard({ onAdd, afterAdd }: Props) {
                                 sx={{
                                     px: 1.2,
                                     py: 0.35,
-                                    borderRadius: 999,
+                                    borderRadius: 1,
                                     fontWeight: 900,
                                     letterSpacing: 0.6,
                                     fontSize: 12,
-                                    backgroundColor: "rgba(255,64,64,0.25)",
+                                    backgroundColor: "rgba(253,71,0,0.25)",
                                     flexShrink: 0,
                                     color: COLORS.text,
                                 }}

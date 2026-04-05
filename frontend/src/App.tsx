@@ -50,7 +50,7 @@ export default function App() {
         <Box
             sx={{
                 minHeight: "100vh",
-                background: COLORS.bg,
+                background: COLORS.blue,
                 color: COLORS.text,
                 py: { xs: 2.5, sm: 3.5, md: 5 },
             }}
@@ -78,7 +78,6 @@ export default function App() {
                     <Box
                         sx={{
                             display: "flex",
-                            gap: 1,
                             flexWrap: "wrap",
                             justifyContent: { xs: "flex-start", sm: "flex-end" },
                             width: { xs: "100%", sm: "auto" },
@@ -88,17 +87,14 @@ export default function App() {
                             elevation={0}
                             sx={{
                                 px: 4,
-                                py: 0.8,
+                                py: 1.8,
                                 borderRadius: 20,
                                 background: "rgba(255,255,255,0.0)",
                                 maxWidth: "100%",
                             }}
                         >
                             <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                                Winter 2026
-                            </Typography>
-                            <Typography variant="caption" sx={{ opacity: 0.7, display: "block" }}>
-                                SOEN 487
+                                Assignment 3
                             </Typography>
                         </Paper>
 
@@ -106,13 +102,18 @@ export default function App() {
                             elevation={0}
                             sx={{
                                 px: 4,
-                                py: 1.8,
+                                py: 0.8,
                                 borderRadius: 20,
                                 background: "rgba(255,255,255,0.0)",
+                                textAlign: "right",
+
                             }}
                         >
                             <Typography variant="body2" sx={{ opacity: 0.85 }}>
-                                Assignment 3
+                                Winter 2026
+                            </Typography>
+                            <Typography variant="caption" sx={{ opacity: 0.7, display: "block" }}>
+                                SOEN 487
                             </Typography>
                         </Paper>
                     </Box>
@@ -127,7 +128,6 @@ export default function App() {
                         background: COLORS.cream,
                         color: "#0b0b0c",
                         border: "none",
-                        // padding: "1rem",
                     }}
                 >
                     <Box
@@ -206,10 +206,10 @@ export default function App() {
                 {/* MAIN GRID: stacks on mobile */}
                 <Box
                     sx={{
-                        mt: { xs: 2.5, md: 3 },
+                        // mt: { xs: 2.5, md: 3 },
                         display: "grid",
                         gridTemplateColumns: { xs: "1fr", md: "1.2fr 0.8fr" },
-                        gap: { xs: 2, md: 3 },
+                        // gap: { xs: 2, md: 3 },
                         alignItems: "start",
                     }}
                 >
@@ -219,7 +219,7 @@ export default function App() {
                             background: COLORS.brown,
                             borderRadius: { xs: 4, md: 4 },
                             p: { xs: 3, md: 3 },
-                            border: `1px solid ${COLORS.border}`,
+                            // border: `1px solid ${COLORS.border}`,
                             overflow: "hidden", // keeps inner hover transforms tidy on small screens
                         }}
                     >
@@ -232,13 +232,13 @@ export default function App() {
                     </Box>
 
                     {/* Right: find + add */}
-                    <Box sx={{ display: "grid", gap: { xs: 2, md: 3 } }}>
+                    <Box sx={{ display: "grid",  }}>
                         <Box
                             sx={{
-                                background: "rgba(230,255,0,0.10)",
+                                background: COLORS.brown,
                                 borderRadius: { xs: 4, md: 4 },
                                 p: { xs: 3, md: 3 },
-                                border: `1px solid rgba(230,255,0,0.18)`,
+                                // border: `1px solid ${COLORS.border}`,
                                 overflow: "hidden",
                             }}
                         >
@@ -247,10 +247,10 @@ export default function App() {
 
                         <Box
                             sx={{
-                                background: "rgba(255,106,0,0.12)",
+                                background: COLORS.brown,
                                 borderRadius: { xs: 4, md: 4 },
                                 p: { xs: 3, md: 3 },
-                                border: `1px solid rgba(255,106,0,0.22)`,
+                                // border: `1px solid ${COLORS.border}`,
                                 overflow: "hidden",
                             }}
                         >

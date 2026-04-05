@@ -19,11 +19,11 @@ export const COLORS = {
     border: "rgba(255,255,255,0.10)",
 
     // Palette
-    cream: "#E9E1D8",
+    cream: "#b8b2ad",
     neon: "#E6FF00",
-    brown: "#2B211B",
-    sage: "#7B7A67",
-    orange: "#FF6A00",
+    brown: "#1c1c1c",
+    orange: "#ff4f00",
+    blue: "#5356e1",
 
     // Text
     text: "rgba(255,255,255,0.92)",
@@ -34,7 +34,7 @@ export const theme = createTheme({
     palette: {
         mode: "dark",
         primary: { main: COLORS.neon },
-        secondary: { main: COLORS.orange },
+        secondary: { main: COLORS.blue },
         background: {
             default: COLORS.bg,
             paper: COLORS.surface,
@@ -161,7 +161,6 @@ export const theme = createTheme({
                 root: {
                     borderRadius: 999,
                     border: "none",
-                    // padding: "8px 16px",
                     minWidth: 92,
                     maxHeight: 40,
                     fontWeight: 900,
@@ -169,7 +168,7 @@ export const theme = createTheme({
                     textTransform: "none",
 
                     // default (unselected)
-                    color: "rgba(255,255,255,0.78)",
+                    color: COLORS.text,
                     backgroundColor: "transparent",
                     transition: "background-color 160ms ease, color 160ms ease",
 
@@ -177,13 +176,13 @@ export const theme = createTheme({
                         backgroundColor: "rgba(255,255,255,0.06)",
                     },
 
-                    // selected segment (like “Now”)
+                    // selected segment
                     "&.Mui-selected": {
-                        backgroundColor: COLORS.cream,
+                        backgroundColor: COLORS.neon,
                         color: "#0b0b0c",
                     },
                     "&.Mui-selected:hover": {
-                        backgroundColor: "#ded6cd", // slightly darker cream hover
+                        backgroundColor: "#d6d602", // slightly darker cream hover
                     },
                 },
             },
