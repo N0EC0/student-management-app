@@ -151,9 +151,8 @@ export default function AllStudentsCard({ students, loading, error, onRefresh }:
                                         alignItems: "baseline",
                                         py: 1.3,
 
-                                        borderRadius: 3,
-                                        px: 1,
-                                        mx: -1,
+                                        borderRadius: 2,
+                                        px: 3,
                                         transition: "background-color 140ms ease, transform 140ms ease",
                                         "&:hover": {
                                             backgroundColor: "rgba(255,255,255,0.06)",
