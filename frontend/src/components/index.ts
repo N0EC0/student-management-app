@@ -1,6 +1,6 @@
 /**
- * Barrel exports for UI components.
- * This lets us import components from "./components" instead of individual paths.
+ * Exports for UI components
+ * To import components from "./components" instead of individual paths
  */
 
 export { default as AllStudentsCard } from "./AllStudentsCard";

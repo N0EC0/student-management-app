@@ -1,6 +1,5 @@
 /**
- * Frontend entry point (no Apollo Client)
- * We keep the frontend minimal and use fetch to call the GraphQL backend.
+ * Frontend entry point
  */
 
 import React from "react";

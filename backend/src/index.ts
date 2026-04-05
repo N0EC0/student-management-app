@@ -1,16 +1,6 @@
 /**
  * Student Management System (Backend)
- * Tech: TypeScript + Express + Apollo Server (GraphQL) + MongoDB
- *
- * Requirements implemented:
- * 1) Retrieve all students
- * 2) Retrieve a student by ID
- * 3) Add new student
- *
- * IMPORTANT semantic change:
- * - Student has its own domain ID: studentId (user-entered)
- * - MongoDB still stores its own internal _id, but GraphQL "id" maps to studentId
- * - Student name is split into firstName and lastName
+ * Technology used: TypeScript + Express + Apollo Server (GraphQL) + MongoDB
  */
 
 import "dotenv/config";
@@ -20,22 +10,18 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { MongoClient, ObjectId } from "mongodb";
 
-// --------------------
 // GraphQL-facing type (what the API returns)
-// --------------------
 type Student = {
-    id: string; // domain student id == studentId in DB
+    id: string;
     firstName: string;
     lastName: string;
     completedCreditHours: number;
 };
 
-// --------------------
 // MongoDB document types
-// --------------------
 type StudentDoc = {
-    _id: ObjectId; // Mongo internal id
-    studentId: string; // domain id (user-entered)
+    _id: ObjectId;
+    studentId: string;
     firstName: string;
     lastName: string;
     completedCreditHours: number;
@@ -48,9 +34,7 @@ type StudentInsert = {
     completedCreditHours: number;
 };
 
-// --------------------
 // MongoDB setup
-// --------------------
 const MONGODB_URI = process.env.MONGODB_URI;
 if (!MONGODB_URI) throw new Error("Missing MONGODB_URI in environment (.env).");
 
@@ -69,9 +53,7 @@ function toStudent(doc: StudentDoc): Student {
     };
 }
 
-// --------------------
 // GraphQL schema (SDL)
-// --------------------
 const typeDefs = `#graphql
   type Student {
     # Domain student ID (NOT MongoDB _id)
@@ -100,9 +82,7 @@ const typeDefs = `#graphql
   }
 `;
 
-// --------------------
 // Resolvers
-// --------------------
 const resolvers = {
     Query: {
         students: async (): Promise<Student[]> => {
@@ -117,7 +97,7 @@ const resolvers = {
         ): Promise<Student | null> => {
             const collection = client.db(DB_NAME).collection<StudentDoc>(COLLECTION);
 
-            // Query by domain studentId (NOT Mongo _id)
+            // Query by domain studentId
             const doc = await collection.findOne({ studentId: args.id });
             return doc ? toStudent(doc) : null;
         },
@@ -147,7 +127,7 @@ const resolvers = {
                 throw new Error(`Student id "${trimmedId}" already exists.`);
             }
 
-            // Insert uses StudentInsert (no _id)
+            // Insert uses StudentInsert
             const insertCollection = client.db(DB_NAME).collection<StudentInsert>(COLLECTION);
 
             try {
@@ -181,7 +161,6 @@ async function bootstrap() {
 
     // Ensure studentId is unique at the database level.
     // This prevents duplicates even if two requests happen at the same time.
-    // Note: createIndex is safe to run on every startup (MongoDB will keep the same index).
     await client
         .db(DB_NAME)
         .collection<StudentDoc>(COLLECTION)
@@ -202,9 +181,9 @@ async function bootstrap() {
     const port = process.env.PORT ? Number(process.env.PORT) : 4000;
 
     app.listen(port, () => {
-        console.log(`✅ GraphQL running at http://localhost:${port}/graphql`);
-        console.log(`✅ Connected to MongoDB database "${DB_NAME}"`);
-        console.log(`✅ Ensured unique index on students.studentId`);
+        console.log(`GraphQL running at http://localhost:${port}/graphql`);
+        console.log(`Connected to MongoDB database "${DB_NAME}"`);
+        console.log(`Ensured unique index on students.studentId`);
     });
 }
 
@@ -214,6 +193,6 @@ process.on("SIGINT", async () => {
 });
 
 bootstrap().catch((err) => {
-    console.error("❌ Server failed to start:", err);
+    console.error("Server failed to start:", err);
     process.exit(1);
 });

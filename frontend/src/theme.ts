@@ -1,15 +1,3 @@
-/**
- * theme.ts (MUI v7-compatible overrides)
- *
- * Goal: match your palette/layout and avoid deprecated theme override keys like:
- * - MuiButton.styleOverrides.containedPrimary  (deprecated in v7)
- *
- * Instead we style variants using class selectors on `root`, e.g.:
- * - &.MuiButton-contained.MuiButton-colorPrimary
- *
- * This should remove the IDE warning.
- */
-
 import { createTheme } from "@mui/material/styles";
 
 export const COLORS = {
@@ -74,11 +62,8 @@ export const theme = createTheme({
             },
         },
 
-        /**
-         * Buttons
-         * IMPORTANT: In MUI v7, avoid deprecated keys like `containedPrimary`.
-         * Use class combinations on root instead.
-         */
+
+        // Buttons
         MuiButton: {
             styleOverrides: {
                 root: {
@@ -182,7 +167,7 @@ export const theme = createTheme({
                         color: "#0b0b0c",
                     },
                     "&.Mui-selected:hover": {
-                        backgroundColor: "#d6d602", // slightly darker cream hover
+                        backgroundColor: "#d6d602", // slightly darker neon hover
                     },
                 },
             },

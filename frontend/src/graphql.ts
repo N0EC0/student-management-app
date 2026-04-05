@@ -1,17 +1,16 @@
 /**
- * GraphQL helper utilities (fetch-based).
- * We keep GraphQL strings and the fetch wrapper here so UI components stay clean.
+ * GraphQL helper utilities (fetch-based)
  */
 
 import type { Student } from "./types";
 
-// Backend GraphQL endpoint (same as your backend)
+// Backend GraphQL endpoint
 export const GRAPHQL_URL = "http://localhost:4000/graphql";
 
 /**
- * Generic helper to call GraphQL via HTTP POST.
- * - Throws on network errors or GraphQL errors.
- * - Returns the `data` object typed as TData.
+ * Generic helper to call GraphQL via HTTP POST
+ * - Throws on network errors or GraphQL errors
+ * - Returns the `data` object typed as TData
  */
 export async function graphqlFetch<
     TData,
@@ -43,10 +42,7 @@ export async function graphqlFetch<
     return json.data;
 }
 
-// --------------------
 // GraphQL operation strings
-// --------------------
-
 export const Q_ALL = `
   query GetAllStudents {
     students {
@@ -80,10 +76,7 @@ export const M_ADD = `
   }
 `;
 
-// --------------------
-// Convenience typed API calls (optional but nice)
-// --------------------
-
+// Convenience typed API calls
 export async function fetchAllStudents(): Promise<Student[]> {
     const data = await graphqlFetch<{ students: Student[] }, undefined>(Q_ALL);
     return data.students;

@@ -1,6 +1,5 @@
 /**
- * Shared TypeScript types for the frontend.
- * Keeping types in one place makes the code easier to read and maintain.
+ * Shared TypeScript types for the frontend
  */
 
 export type Student = {

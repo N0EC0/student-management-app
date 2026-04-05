@@ -1,17 +1,10 @@
 /**
  * AllStudentsCard
- * - Displays all students in a list/table style:
- *   - left: student name
- *   - right: completed credits
- *   - secondary line: student id
+ * - Displays all students in a list/table style
  *
- * Polish features (UI-only):
+ * Features:
  * - Sort toggle (Name / Credits)
  * - Subtle hover states on rows
- * - Credits shown with larger “big number” typography
- *  * AllStudentsCard (content-only)
- *  * NOTE: This component intentionally does NOT render a MUI <Card>.
- *  * App.tsx provides the outer “panel shell” styling to avoid double cards.
  */
 
 import {

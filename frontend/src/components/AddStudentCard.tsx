@@ -1,10 +1,9 @@
 /**
  * AddStudentCard
  * - Form to add a new student (id, first name, last name, credits)
- * - Adds gentle, TA-friendly validation UX:
  *   - helper text
  *   - only shows validation errors after submit attempt
- * - Does NOT enforce strict ID format (to avoid losing points)
+ * - Does NOT enforce strict ID format
  */
 
 import { Alert, Box, Button, TextField, Typography } from "@mui/material";
@@ -97,7 +96,7 @@ export default function AddStudentCard({ onAdd, afterAdd }: Props) {
                         const v = e.target.value;
                         setNewId(v);
 
-                        // B) Clear server warning on ANY change (prevents stale error message)
+                        // Clear server warning on ANY change (prevents stale error message)
                         setServerError(null);
                     }}
                     placeholder="example: 01234567"

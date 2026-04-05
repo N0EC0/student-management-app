@@ -1,13 +1,9 @@
 /**
- * App.tsx
- * - Dashboard layout inspired by the provided mockup:
- *   - dark background
- *   - large top summary card
- *   - 2-column grid underneath
- * - Uses existing components (separation stays TA-friendly)
- *  * App.tsx (responsive)
- *  * - Mobile: single column stacked sections
- *  * - Desktop: 2-column dashboard
+ * - Dashboard layout
+ * - Uses existing components
+ * - Responsive
+ *   - Mobile: single column stacked sections
+ *   - Desktop: 2-column dashboard
  */
 
 import { useState } from "react";
@@ -206,10 +202,8 @@ export default function App() {
                 {/* MAIN GRID: stacks on mobile */}
                 <Box
                     sx={{
-                        // mt: { xs: 2.5, md: 3 },
                         display: "grid",
                         gridTemplateColumns: { xs: "1fr", md: "1.2fr 0.8fr" },
-                        // gap: { xs: 2, md: 3 },
                         alignItems: "start",
                     }}
                 >
@@ -219,7 +213,6 @@ export default function App() {
                             background: COLORS.brown,
                             borderRadius: { xs: 4, md: 4 },
                             p: { xs: 3, md: 3 },
-                            // border: `1px solid ${COLORS.border}`,
                             overflow: "hidden", // keeps inner hover transforms tidy on small screens
                         }}
                     >
@@ -238,7 +231,6 @@ export default function App() {
                                 background: COLORS.brown,
                                 borderRadius: { xs: 4, md: 4 },
                                 p: { xs: 3, md: 3 },
-                                // border: `1px solid ${COLORS.border}`,
                                 overflow: "hidden",
                             }}
                         >
@@ -250,7 +242,6 @@ export default function App() {
                                 background: COLORS.brown,
                                 borderRadius: { xs: 4, md: 4 },
                                 p: { xs: 3, md: 3 },
-                                // border: `1px solid ${COLORS.border}`,
                                 overflow: "hidden",
                             }}
                         >

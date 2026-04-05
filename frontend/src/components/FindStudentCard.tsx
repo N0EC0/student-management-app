@@ -1,9 +1,9 @@
 /**
  * FindStudentCard
- * - Lets the user input a student ID and fetch a student.
- * - Shows loading/error/success states clearly.
+ * - Lets the user input a student ID and fetch a student
+ * - Shows loading/error/success states
  *
- * Polished UI:
+ * UI:
  * - Responsive input/button row (stacks on mobile)
  * - Badge-style result pills for success / not found / error
  */
@@ -63,8 +63,8 @@ export default function FindStudentCard({ onFind }: Props) {
                         const v = e.target.value;
                         setSearchId(v);
 
-                        // B) Clear badges/messages on ANY change (not only when empty).
-                        // This removes stale FOUND / NOT FOUND / ERROR state as the user edits.
+                        // Clear badges/messages on ANY change (not only when empty)
+                        // This removes stale FOUND / NOT FOUND / ERROR state as the user edits
                         setError(null);
                         setFound(undefined);
                     }}
