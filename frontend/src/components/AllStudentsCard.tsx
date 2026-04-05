@@ -26,6 +26,7 @@ import {
 } from "@mui/material";
 import { useMemo, useState } from "react";
 import type { Student } from "../types";
+import {COLORS} from "../theme.ts";
 
 type Props = {
     students: Student[];
@@ -139,7 +140,40 @@ export default function AllStudentsCard({ students, loading, error, onRefresh }:
             {!loading && !error && (
                 <Box sx={{ display: "grid" }}>
                     {sortedStudents.length === 0 ? (
-                        <Alert severity="info">No students found.</Alert>
+                        <Alert severity="info"
+                               icon={false}
+                               sx={{
+                                   mt: 2,
+                                   borderRadius: 2.5,
+                                   border: "1px solid rgba(233,225,216,0.22)",
+                                   backgroundColor: "rgba(233,225,216,0.08)",
+                                   py: 0.5,
+                                   "& .MuiAlert-message": { width: "100%" },
+                               }}
+                        >
+                            <Box sx={{ display: "flex", alignItems: "center", gap: 1.2 }}>
+                                <Box
+                                    sx={{
+                                        px: 1.2,
+                                        py: 0.35,
+                                        borderRadius: 999,
+                                        fontWeight: 900,
+                                        letterSpacing: 0.6,
+                                        fontSize: 12,
+                                        backgroundColor: COLORS.orange,
+                                        flexShrink: 0,
+                                        color: COLORS.text,
+                                    }}
+                                >
+                                    NO STUDENT FOUND
+                                </Box>
+                                <Typography variant="body2" sx={{ opacity: 0.9, color: COLORS.text }}>
+                                    The list is empty, add a student.
+                                </Typography>
+                            </Box>
+
+
+                        </Alert>
                     ) : (
                         sortedStudents.map((s, idx) => (
                             <Box key={s.id}>
