@@ -11,22 +11,18 @@
 ## Screenshots
 
 - Dashboard (desktop):
+
+  
   ![Dashboard (desktop)](screenshots/dashboard-desktop1.png)
   ![Dashboard (desktop)](screenshots/dashboard-desktop2.png)
   ![Dashboard (desktop)](screenshots/dashboard-desktop3.png)
   ![Dashboard (desktop)](screenshots/dashboard-desktop4.png)
 
-    - `screenshots/dashboard-desktop1.png`
-    - `screenshots/dashboard-desktop2.png`
-    - `screenshots/dashboard-desktop3.png`
-    - `screenshots/dashboard-desktop4.png`
-
   - Dashboard (mobile):
+ 
+    
     ![Dashboard (mobile)](screenshots/dashboard-mobile1.png)
     ![Dashboard (mobile)](screenshots/dashboard-mobile2.png)
-      - `screenshots/dashboard-mobile1.png`
-      - `screenshots/dashboard-mobile1.png`
-
 
 ---
 
